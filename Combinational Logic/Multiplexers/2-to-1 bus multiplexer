@@ -1,0 +1,11 @@
+module top_module( 
+    input [99:0] a, b,
+    input sel,
+    output [99:0] out );
+    
+  //  wire c= out [99:0];
+   // wire x = a[99:0];
+    //wire y = b;
+    assign out = (sel? b : a);
+
+endmodule
