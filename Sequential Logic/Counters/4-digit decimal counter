@@ -1,0 +1,37 @@
+module bcd_counter(
+    input clk,
+    input reset,ena,        // Synchronous active-high reset
+    output [3:0] q);
+    
+    
+    always@(posedge clk)begin
+        if(reset) q<=4'd0;
+        else if(ena)
+            if(q==4'd9) q<=4'd0;
+        else
+            q<=q+1;
+    end
+
+endmodule
+
+module top_module (
+    input clk,
+    input reset,   // Synchronous active-high reset
+    output [3:1] ena,
+    output [15:0] q);
+    
+    bcd_counter c1 (clk,reset,1'd1,q[3:0]);
+    genvar i;
+    generate
+        for(i=1;i<=3;i=i+1)
+            begin:gen_for_loop
+                bcd_counter c2 (clk,reset,ena[i],q[i*4+3:i*4]);
+            end
+    endgenerate
+    
+    assign ena[1] = (q[3:0] == 9);
+    assign ena[2] = ((q[7:4] == 9)&(q[3:0] == 9));
+    assign ena[3] = ((q[11:8] == 9)&(q[7:4] == 9)&(q[3:0] == 9));
+   
+
+endmodule
