@@ -1,0 +1,13 @@
+module top_module (
+    input clk,
+    input in, 
+    output out);
+    
+    wire x,d,q;
+    always@(posedge clk) begin
+        out<=in^out;
+       
+    end
+        
+
+endmodule
