@@ -1,0 +1,30 @@
+module top_module (
+    input clk,
+    input areset,
+    input x,
+    output z
+); 
+    parameter idle=0,s1=1,s2=2;
+    reg[2:0] state,nstate;
+    always@(*)begin
+        case(state)
+            idle :nstate =x?s1:idle;
+            s1   :nstate =x?s2:s1;
+            s2   :nstate =x?s2:s1;
+            default:nstate =idle;
+        endcase
+    end
+    
+    always@(posedge clk,posedge areset)begin
+        if(areset)begin
+            state<=idle;
+        end
+        else begin
+            state<=nstate;
+        end
+    end
+    assign z=(state==s1)?1'b1:1'b0;
+
+        
+
+endmodule
