@@ -1,0 +1,23 @@
+module top_module (
+    input [3:1] y,
+    input w,
+    output Y2);
+    
+    parameter a= 3'b000,b= 3'b001,c= 3'b010,d= 3'b011,e= 3'b100,f= 3'b101;
+    reg[2:0]st,nst;
+    
+    //assign Y2 = (y == b | y == f) & ~w | (y == b | y == c | y == e | y == f) & w;
+    always@(*)begin
+        case(y)
+            a:nst=w?a:b;
+            b:nst=w?d:c;
+            c:nst=w?d:e;
+            d:nst=w?a:f;
+            e:nst=w?d:e;
+            f:nst=w?d:c;
+            default:nst=a;
+        endcase
+    end
+    assign Y2=(nst==c)||(nst==d);
+    
+endmodule
