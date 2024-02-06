@@ -1,0 +1,61 @@
+module top_module (
+    input clk,
+    input reset,   // Synchronous reset
+    input s,
+    input w,
+    output z
+);
+    parameter a=0,b=1;
+    reg [2:0]state,nstate;
+    
+    always@(*)begin
+        case(state)
+            a:nstate=s?b:a;
+            b:nstate=b;
+            
+        endcase
+    end
+    always@(posedge clk)
+        if(reset)begin
+            state<=a;
+        end
+            else begin
+                state<=nstate;
+        end
+    
+    reg[1:0]cnt;
+    reg z1,z2;
+    
+    always@(posedge clk)begin
+        if(reset)
+            cnt<=2'd0;
+        else if(cnt==2'd2)
+            cnt<=2'd0;
+        else if(state==b)
+            cnt<=cnt+1;
+    end
+    always@(posedge clk)begin
+        if(reset)
+            begin
+                z<=1'd0;
+                z1<=1'd0;
+                z2<=1'd0;
+            end
+        else if(state==b)
+            begin
+                if(cnt==0)begin
+                    z1<=w;
+                    z<=1'd0;
+                end
+                else if(cnt==1)
+                    begin
+                        z2<=w;
+                        z<=1'd0;
+                    end
+                else if(cnt==2)
+                    z<=(z1&z2&~w)|(~z1&z2&w)|(z1&~z2&w);
+            end
+    end
+    //assign z=(state==b && w==1);
+
+endmodule
