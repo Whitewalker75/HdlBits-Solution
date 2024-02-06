@@ -1,0 +1,71 @@
+module top_module(
+    input clk,
+    input in,
+    input reset,    // Synchronous reset
+    output done
+); 
+    
+    parameter start=0,s0=1,s1=2,s2=3,s3=4,s4=5,s5=6,s6=7,s7=8,s8=9,stop=10,done1=11;
+    reg[3:0]state,next_state;
+    always@(*)begin
+        case(state)
+            start:if(in==0)begin
+                next_state=s0;
+            end
+                else begin
+                    next_state=start;
+                end           
+            
+            s0:begin
+                next_state=s1;
+            end
+            s1:begin
+                next_state=s2;
+            end
+            s2:begin
+                next_state=s3;
+            end
+            s3:begin
+                next_state=s4;
+            end
+            s4:begin
+                next_state=s5;
+            end
+            s5:begin
+                next_state=s6;
+            end
+            s6:begin
+                next_state=s7;
+            end
+            s7:begin
+                next_state=s8;
+            end
+            s8:begin
+                if(in==1) next_state=done1;
+                else next_state=stop;
+            end
+                       
+            stop:begin
+                if(in==1)next_state=start;
+                else next_state =stop;
+            end
+            done1:begin
+                if(in==1)next_state=start;
+                else next_state=s0;
+            end
+            default:begin
+                next_state=start;
+            end
+        endcase
+    end
+    always@(posedge clk)begin
+        if(reset)begin
+            state<=start;
+        end
+        else begin
+            state<=next_state;
+        end
+    end
+    assign done =(state==done1); 
+
+endmodule
