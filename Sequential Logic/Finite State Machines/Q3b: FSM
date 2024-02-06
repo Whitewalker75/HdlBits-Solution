@@ -1,0 +1,37 @@
+module top_module (
+    input clk,
+    input reset,   // Synchronous reset
+    input x,
+    output z
+);
+    parameter idle=0,s1=1,s2=2,s3=3,s4=4;
+    reg[3:0] st,nst;
+    
+    always@(*)begin
+        case(st)
+            idle :begin nst=x?s1:idle;
+                z<=0;
+            end
+            s1   :begin nst=x?s4:s1;
+                z<=0;
+            end
+            s2   :begin nst=x?s1:s2;
+                z<=0;
+            end
+            s3   :begin nst=x?s2:s1;
+                z<=1;
+            end
+            s4   :begin nst=x?s4:s3;
+                z<=1;
+            end
+            default:nst=idle;
+        endcase
+    end
+    always@(posedge clk)begin
+        if(reset)
+            st<=idle;
+        else
+            st<=nst;
+    end
+    //assign z=(nst==(s3|s4));
+endmodule
