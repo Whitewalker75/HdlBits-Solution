@@ -1,0 +1,24 @@
+module top_module ();
+    reg clk;
+    reg[1:0]reset,t;
+    wire q;
+    
+    tff tff1(clk,reset,t,q);
+    
+    //initial clk=0;
+    always #5 clk=~clk;
+    
+    initial begin
+        clk=0;
+        reset =1;
+        t=0;
+        
+        #10 t=1;
+        reset=0;
+        
+        //#10 t=0;
+        //reset t=0;
+        
+    end
+
+endmodule
