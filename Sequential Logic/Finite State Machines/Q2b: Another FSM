@@ -1,0 +1,75 @@
+module top_module (
+    input clk,
+    input resetn,    // active-low synchronous reset
+    input x,
+    input y,
+    output f,
+    output g
+); 
+    
+    parameter idle=0,a=1,b=2,c=3,d=4,e=5,choose=6,forever_zero=7,forever_one=8;
+    reg[3:0] st,ns;
+    
+    always@(posedge clk)begin
+        if(~resetn)
+            st<=idle;
+        else st<=ns;
+    end
+    
+    always@(*)begin
+        case(st)
+            idle:begin
+                ns<=a;
+                f<=0;
+                g<=0;
+            end
+            a:begin
+                ns<=b;
+                f<=1;
+                g<=0;
+            end
+            b:begin
+                ns<=x?c:b;
+                f<=0;
+                g<=0;
+            end
+            c:begin
+                ns<=x?c:d;
+                f<=0;
+                g<=0;
+            end
+            d:begin
+                ns<=x?e:b;
+                f<=0;
+                g<=0;
+            end
+            e:begin
+                ns<=y?forever_one:choose;
+                f<=0;
+                g<=1;
+            end
+            choose:begin
+                ns<=y?forever_one:forever_zero;
+                f<=0;
+                g<=1;
+            end
+            forever_zero:begin
+                ns<=forever_zero;
+                f<=0;
+                g<=0;
+            end
+            forever_one:begin
+                ns<=forever_one;
+                f<=0;
+                g<=1;
+            end
+            default:begin
+                ns<=a;
+                f<=0;
+                g<=0;
+            end
+        endcase
+    end
+        
+
+endmodule
