@@ -1,0 +1,32 @@
+module top_module (
+    input clk,
+    input a,
+    input b,
+    output q,
+    output state  );
+    
+   /* parameter A=0,B=1;
+    reg next_state;
+    
+    always@(posedge clk)
+        begin
+            state<=next_state;
+        end
+    always@(*)
+        begin
+            if(a&b)
+                next_state<=B;
+            else if(~(a|b))
+                next_state<=A;
+        end
+    assign q=state?~(a^b):(a^b);
+
+endmodule*/
+    always @(posedge clk) begin
+        if (a == b)
+            state = a;
+        else
+            state = state;
+    end
+    assign q = a^b^state;
+endmodule
