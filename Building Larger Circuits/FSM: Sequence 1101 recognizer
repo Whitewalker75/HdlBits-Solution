@@ -1,0 +1,39 @@
+module top_module (
+    input clk,
+    input reset,      // Synchronous reset
+    input data,
+    output start_shifting);
+    
+    parameter a=0,b=1,c=2,d=3,e=4;
+    reg[3:0]st,nst;
+    
+    always@(posedge clk)begin
+        if(reset)
+            st<=a;
+        else
+            st<=nst;
+    end
+    always@(*)begin
+        case(st)
+            a:begin nst<=data?b:a;
+                start_shifting<=0;
+            end
+            b:begin nst<=data?c:a;
+                start_shifting<=0;
+            end
+            
+            c:begin nst<=data?c:d;
+                start_shifting<=0;
+            end
+            
+            d:begin nst<=data?e:a;
+                start_shifting<=0;
+            end
+            e:begin nst<=e;
+                start_shifting<=1;
+            end
+        endcase
+    end
+            
+
+endmodule
