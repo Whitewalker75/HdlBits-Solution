@@ -1,0 +1,56 @@
+module top_module (
+    input clk,
+    input resetn,    // active-low synchronous reset
+    input [3:1] r,   // request
+    output [3:1] g   // grant
+); 
+    reg [1:0] state,next_state;
+    parameter A=2'b00,B=2'b01,C=2'b11,D=2'b10;
+    
+    always@(posedge clk)begin
+        if(~resetn)
+            state <= A;
+        else
+            state <= next_state;
+    end
+    
+    always@(*)begin
+        case(state)
+            A:begin
+                g<=3'b000;
+                if(r[1])
+                    next_state<=B;
+                else if(~r[1]&r[2])
+                    next_state<=C;
+                else if(~r[1]&~r[2]&r[3])
+                    next_state<=D;
+                else
+                    next_state<=A;
+            end
+            B:begin
+                g <= 3'b001;
+                if(r[1])
+                    next_state <= B;
+                else
+                    next_state <= A;
+            end
+            C:begin
+                g <= 3'b010;
+                if(r[2])
+                    next_state <= C;
+                else
+                    next_state <= A;
+            end
+            D:begin
+                g <= 3'b100;
+                if(r[3])
+                    next_state <= D;
+                else
+                    next_state <= A;
+            end
+        endcase
+    end
+
+                    
+
+endmodule
